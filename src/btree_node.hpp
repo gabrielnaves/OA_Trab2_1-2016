@@ -3,7 +3,7 @@
 
 #include "include_all_std.hpp"
 
-typedef int KeyType;
+typedef string KeyType;
 
 struct BtreeNode : public enable_shared_from_this<BtreeNode> {
   public:
