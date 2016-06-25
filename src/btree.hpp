@@ -3,21 +3,22 @@
 
 #include "include_all_std.hpp"
 
-#include "btree_page.hpp"
+#include "btree_node.hpp"
 
 class Btree {
   public:
     Btree(int order);
 
-    void showBtree();
-    void insertKey(string key);
+    void show();
+    void insert(string key);
 
   private:
 
-    void showBtree(shared_ptr<BtreePage> page);
+    void showBtree(shared_ptr<BtreeNode> page);
+    shared_ptr<BtreeNode> makeNewPage(string key);
 
     int order;
-    shared_ptr<BtreePage> root;
+    shared_ptr<BtreeNode> root;
 };
 
 #endif /* BTREE_HPP */
