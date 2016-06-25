@@ -5,14 +5,18 @@ Btree::Btree(int order) {
     root = nullptr;
 }
 
-void Btree::insert(string key) {
+Btree::~Btree() {
+    root->emptyTree();
+}
+
+void Btree::insert(KeyType key) {
     if (not root)
         root = makeNewPage(key);
     shared_ptr<BtreeNode> insertion_node = root->findInsertionLocation(key);
     root = insertion_node->insert(key);
 }
 
-shared_ptr<BtreeNode> Btree::makeNewPage(string key) {
+shared_ptr<BtreeNode> Btree::makeNewPage(KeyType key) {
     return make_shared<BtreeNode>(order);
 }
 

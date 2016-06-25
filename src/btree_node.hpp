@@ -3,23 +3,26 @@
 
 #include "include_all_std.hpp"
 
+typedef int KeyType;
+
 struct BtreeNode : public enable_shared_from_this<BtreeNode> {
   public:
     BtreeNode(int order);
-    BtreeNode(int order, vector<string> keys, vector<shared_ptr<BtreeNode>> next_pages);
+    BtreeNode(int order, vector<KeyType> keys, vector<shared_ptr<BtreeNode>> next_pages);
 
+    void emptyTree();
     void show();
     bool isLeaf();
 
-    shared_ptr<BtreeNode> findInsertionLocation(string new_key);
-    shared_ptr<BtreeNode> insert(string new_key);
+    shared_ptr<BtreeNode> findInsertionLocation(KeyType new_key);
+    shared_ptr<BtreeNode> insert(KeyType new_key);
     shared_ptr<BtreeNode> insertionRebalancing();
-    void insertionArrangeParentNode(string promoted_key, shared_ptr<BtreeNode> sibling);
+    void insertionArrangeParentNode(KeyType promoted_key, shared_ptr<BtreeNode> sibling);
 
     shared_ptr<BtreeNode> splitNode();
 
     int order;
-    vector<string> keys;
+    vector<KeyType> keys;
     vector<shared_ptr<BtreeNode>> next_pages;
     shared_ptr<BtreeNode> parent_node;
 };
