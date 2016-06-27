@@ -15,11 +15,18 @@ class Btree {
 
   private:
 
-    void showBtree(shared_ptr<BtreeNode> page);
-    shared_ptr<BtreeNode> makeNewPage(KeyType key);
+    // Insertion methods
+    void insertOnNode(Node node, Node parent, KeyType key);
+	void insertKeyOnLeaf(Node leaf_node, KeyType key);
+    void insertionRebalanceNode(Node node, Node parent);
+	
+
+    void showBtree(Node page);
+    Node makeNewPage();
+	Node makeNewPage(vector<KeyType> keys, vector<Node> refs);
 
     int order;
-    shared_ptr<BtreeNode> root;
+    Node root;
 };
 
 #endif /* BTREE_HPP */

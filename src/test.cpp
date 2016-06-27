@@ -20,17 +20,17 @@ void Test::testMiscOperations() {
 
 void Test::testBtree() {
     Btree btree(4);
-    btree.insert("A");
-    btree.insert("B");
-    btree.insert("C");
-    btree.insert("D");
-    btree.insert("E");
-    btree.insert("F");
-    btree.insert("G");
-    // btree.insert("H");
-    // btree.insert("I");
-    // btree.insert("J");
-    // btree.insert("K");
+    btree.insert(5);
+    btree.insert(7);
+    btree.insert(3);
+    btree.insert(8);
+    // btree.insert(6);
+    // btree.insert(11);
+    // btree.insert(1);
+    // btree.insert(2);
+    // btree.insert(4);
+    // btree.insert(9);
+    // btree.insert(10);
     btree.show();
 }
 
