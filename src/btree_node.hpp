@@ -5,7 +5,7 @@
 
 struct BtreeNode;
 
-typedef int KeyType;
+typedef string KeyType;
 typedef shared_ptr<BtreeNode> Node;
 
 struct BtreeNode {

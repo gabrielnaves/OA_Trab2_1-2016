@@ -1,11 +1,46 @@
 #include "btree.hpp"
 
-Btree::Btree(int order) {
+Btree::Btree(int order, string data_fname, string tree_fname) {
     this->order = order;
-    root = makeNewPage();
+
+    data_file.open(data_fname, std::fstream::in | std::fstream::out);
+    if (not data_file) {
+        cout << "Erro! Arquivo de dados não encontrado!" << endl;
+        return;
+    }
+
+    index_file.open(tree_fname, std::fstream::in | std::fstream::out);
+    if (not index_file) {
+        // index_file.open(tree_fname, std::fstream::out);
+        makeTreeFromDataFile();
+    }
+    else {
+        unPackTree();
+    }
 }
 
-Btree::~Btree() {}
+Btree::~Btree() {
+    packTree();
+}
+
+void Btree::makeTreeFromDataFile() {
+    root = makeNewPage();
+    data_file.seekg(0);
+    string line;
+    while (getline(data_file, line)) {
+        string primary_key = msc::makePrimaryKey(line.substr(0,40), line.substr(41, 5));
+        insert(primary_key);
+    }
+    packTree();
+}
+
+void Btree::unPackTree() {
+
+}
+
+void Btree::packTree() {
+
+}
 
 void Btree::insert(KeyType key) {
     insertOnNode(root, nullptr, key);
