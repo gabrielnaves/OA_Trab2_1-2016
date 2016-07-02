@@ -29,11 +29,18 @@ class Btree {
     Node makeNewPage();
     Node makeNewPage(vector<KeyType> keys, vector<int> prrs, vector<Node> refs);
 
+    void openDataFile();
+    void closeDataFile();
+    void openIndexFile();
+    void closeIndexFile();
+
     int order;
     Node root;
 
     fstream data_file;
     fstream index_file;
+    string data_fname;
+    string tree_fname;
 };
 
 #endif /* BTREE_HPP */

@@ -2,21 +2,24 @@
 
 Btree::Btree(int order, string data_fname, string tree_fname) {
     this->order = order;
+    this->data_fname = data_fname;
+    this->tree_fname = tree_fname;
 
-    data_file.open(data_fname, std::fstream::in | std::fstream::out);
-    if (not data_file) {
-        cout << "Erro! Arquivo de dados não encontrado!" << endl;
-        return;
-    }
+    openDataFile(); ///
+        if (not data_file) {
+            cout << "Erro! Arquivo de dados não encontrado!" << endl;
+            return;
+        }
+    closeDataFile(); ///
 
-    index_file.open(tree_fname, std::fstream::in | std::fstream::out);
-    if (not index_file) {
-        // index_file.open(tree_fname, std::fstream::out);
-        makeTreeFromDataFile();
-    }
-    else {
+    openIndexFile(); ///
+        bool index_file_exists = index_file;
+    closeIndexFile(); ///
+
+    if (index_file_exists)
         unPackTree();
-    }
+    else
+        makeTreeFromDataFile();
 }
 
 Btree::~Btree() {
@@ -24,15 +27,20 @@ Btree::~Btree() {
 }
 
 void Btree::makeTreeFromDataFile() {
-    root = makeNewPage();
-    data_file.seekg(0);
-    string line;
-    int offset = 0;
-    while (getline(data_file, line)) {
-        string primary_key = msc::makePrimaryKey(line.substr(0,40), line.substr(41, 5));
-        insert(primary_key, offset);
-        offset++;
-    }
+    vector<string> primary_keys;
+    vector<int> offsets;
+    openDataFile(); ///
+        root = makeNewPage();
+        string line;
+        int offset = 0;
+        while (getline(data_file, line)) {
+            primary_keys.push_back(msc::makePrimaryKey(line.substr(0,40), line.substr(41, 5)));
+            offsets.push_back(offset);
+            offset++;
+        }
+    closeDataFile(); ///
+    for (int i = 0; i < primary_keys.size(); ++i)
+        insert(primary_keys[i], offsets[i]);
     packTree();
 }
 
@@ -130,3 +138,20 @@ void Btree::showBtree(Node page) {
             showBtree(next_page);
     }
 }
+
+void Btree::openDataFile() {
+    data_file.open(data_fname, std::fstream::in | std::fstream::out);
+}
+
+void Btree::closeDataFile() {
+    data_file.close();
+}
+
+void Btree::openIndexFile() {
+    index_file.open(tree_fname, std::fstream::in | std::fstream::out);
+}
+
+void Btree::closeIndexFile() {
+    index_file.close();
+}
+
