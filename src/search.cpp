@@ -2,7 +2,7 @@
 
 int Search::nseeks = 0;
 
-Registry Search::search(string data_fname, string index_fname, string key) {
+Registry Search::search(string data_fname, string index_fname, string key, int order) {
     Registry reg;
     ifstream data_file(data_fname), index_file(index_fname);
 
@@ -22,12 +22,12 @@ Registry Search::search(string data_fname, string index_fname, string key) {
     int root;
     getline(index_file, line);
     sscanf(line.c_str(), "root: %d", &root);
-    index_file.seekg(10+root*74); // Seek to root
+    index_file.seekg(10 + root*(12 + (order-1)*9 + 3 + (order-1)*4 + 3 + order*4 + 1)); // Seek to root
 
     nseeks = 1;
     while (true) {
         getline(index_file, line);
-        auto tmp = parseLine(line, key);
+        auto tmp = parseLine(line, key, order);
         if (tmp.first == -1 and tmp.second == -1) {
             cout << "Erro! Registro nao encontrado." << endl;
             return badReg();
@@ -35,15 +35,16 @@ Registry Search::search(string data_fname, string index_fname, string key) {
         if (tmp.first == -1) {
             return retrieveFromDataFile(data_file, tmp.second);
         }
+        // Seek to next page
         nseeks++;
-        index_file.seekg(10+tmp.first*74); // Seek to next page
+        index_file.seekg(10 + tmp.first*(12 + (order-1)*9 + 3 + (order-1)*4 + 3 + order*4 + 1));
     }
 
     reg.good = true;
     return reg;
 }
 
-pair<int,int> Search::parseLine(string line, string key) {
+pair<int,int> Search::parseLine(string line, string key, int order) {
     pair<int, int> res;
 
     line = line.substr(6);
@@ -67,12 +68,12 @@ pair<int,int> Search::parseLine(string line, string key) {
     }
 
     if (found_key) {
-        line = line.substr(30);
+        line = line.substr((order-1)*9 + 3);
         res.first = -1;
         res.second = msc::strToInt(line.substr(i*4));
     }
     else {
-        line = line.substr(45);
+        line = line.substr((order-1)*9 + 3 + (order-1)*4 + 3);
         string tmp = line.substr(i*4).substr(1);
         if (tmp == "###")
             res.first = -1;

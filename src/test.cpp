@@ -25,12 +25,15 @@ void Test::testMiscOperations() {
 
 void Test::testBtree() {
     remove("testes/btree.txt");
+    remove("testes/btree2.txt");
+    remove("testes/btree3.txt");
     Btree a(4, "testes/lista.txt", "testes/btree.txt");
-    // a.insert()
+    Btree b(5, "testes/lista.txt", "testes/btree2.txt");
+    Btree c(100, "testes/lista.txt", "testes/btree3.txt");
 }
 
 void Test::testSearch() {
-    Registry reg = Search::search("testes/lista.txt", "testes/btree.txt", "Mig12997");
+    Registry reg = Search::search("testes/lista.txt", "testes/btree.txt", "Mig12997", 4);
     assertTrue(reg.good);
     assertEqual(reg.name, "Miguel Bianchini");
     assertEqual(reg.matr, "12997");
@@ -38,13 +41,29 @@ void Test::testSearch() {
     assertEqual(reg.turma, "A");
     assertEqual(reg.nseeks, 3);
 
-    reg = Search::search("testes/lista.txt", "testes/btree.txt", "Wil44654");
+    reg = Search::search("testes/lista.txt", "testes/btree.txt", "Wil44654", 4);
     assertTrue(reg.good);
     assertEqual(reg.name, "William Fernandes Crepaldi");
     assertEqual(reg.matr, "44654");
     assertEqual(reg.curso, "CC");
     assertEqual(reg.turma, "A");
     assertEqual(reg.nseeks, 2);
+
+    reg = Search::search("testes/lista.txt", "testes/btree2.txt", "And71929", 5);
+    assertTrue(reg.good);
+    assertEqual(reg.name, "Andre Alvim Batista");
+    assertEqual(reg.matr, "71929");
+    assertEqual(reg.curso, "EM");
+    assertEqual(reg.turma, "B");
+    assertEqual(reg.nseeks, 3);
+
+    reg = Search::search("testes/lista.txt", "testes/btree3.txt", "And71929", 100);
+    assertTrue(reg.good);
+    assertEqual(reg.name, "Andre Alvim Batista");
+    assertEqual(reg.matr, "71929");
+    assertEqual(reg.curso, "EM");
+    assertEqual(reg.turma, "B");
+    assertEqual(reg.nseeks, 1);
 }
 
 void Test::finalOutput() {

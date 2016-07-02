@@ -4,6 +4,7 @@
 #include "include_all_std.hpp"
 
 #include "btree.hpp"
+#include "search.hpp"
 
 class GUI {
   public:
@@ -13,6 +14,7 @@ class GUI {
   private:
 
     static void createBTreeFromDataFile();
+    static void searchReg();
 
     static bool is_ok;
 };

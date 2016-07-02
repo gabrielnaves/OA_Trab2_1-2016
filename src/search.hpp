@@ -8,10 +8,10 @@
 
 class Search {
   public:
-    static Registry search(string data_fname, string index_fname, string key);
+    static Registry search(string data_fname, string index_fname, string key, int order);
 
   private:
-    static pair<int,int> parseLine(string line, string key);
+    static pair<int,int> parseLine(string line, string key, int order);
     static Registry retrieveFromDataFile(ifstream& data_file, int offset);
     static Registry badReg();
 
