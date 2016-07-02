@@ -7,6 +7,7 @@ void Test::runTests() {
     printf("----------------------------------------\n");
     testMiscOperations();
     testBtree();
+    testSearch();
     finalOutput();
 }
 
@@ -16,15 +17,34 @@ void Test::testMiscOperations() {
     assertEqual(msc::removeSpaces("Carlos Dias Takase"), "CarlosDiasTakase");
     assertEqual(msc::removeSpaces("Carlos    "), "Carlos");
     assertEqual(msc::removeSpaces("    C a r l o s    "), "Carlos");
+    assertEqual(msc::removeTrailingSpaces("a   "), "a");
+    assertEqual(msc::removeTrailingSpaces("a  b "), "a  b");
+    assertEqual(msc::removeTrailingSpaces("     "), "");
+    assertEqual(msc::removeTrailingSpaces(""), "");
 }
 
 void Test::testBtree() {
     remove("testes/btree.txt");
     Btree a(4, "testes/lista.txt", "testes/btree.txt");
-    a.show();
-    cout << "========" << endl;
-    Btree b(4, "testes/lista.txt", "testes/btree.txt");
-    b.show();
+    // a.insert()
+}
+
+void Test::testSearch() {
+    Registry reg = Search::search("testes/lista.txt", "testes/btree.txt", "Mig12997");
+    assertTrue(reg.good);
+    assertEqual(reg.name, "Miguel Bianchini");
+    assertEqual(reg.matr, "12997");
+    assertEqual(reg.curso, "CC");
+    assertEqual(reg.turma, "A");
+    assertEqual(reg.nseeks, 3);
+
+    reg = Search::search("testes/lista.txt", "testes/btree.txt", "Wil44654");
+    assertTrue(reg.good);
+    assertEqual(reg.name, "William Fernandes Crepaldi");
+    assertEqual(reg.matr, "44654");
+    assertEqual(reg.curso, "CC");
+    assertEqual(reg.turma, "A");
+    assertEqual(reg.nseeks, 2);
 }
 
 void Test::finalOutput() {
@@ -43,3 +63,20 @@ void Test::assertEqual(string a, string b) {
                                              , b.substr(0,20).c_str());
     }
 }
+
+void Test::assertEqual(int a, int b) {
+    test_amount++;
+    if (a != b) {
+        failed_test_amount++;
+        printf("Failed test [%d]: %d != %d\n", test_amount, a, b);
+    }
+}
+
+void Test::assertTrue(bool a) {
+    test_amount++;
+    if (not a) {
+        failed_test_amount++;
+        printf("Failed test [%d]! Condition sent is not true.\n", test_amount);
+    }
+}
+

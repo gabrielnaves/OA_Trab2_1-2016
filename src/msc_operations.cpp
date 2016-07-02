@@ -16,6 +16,12 @@ string msc::removeSpaces(string str) {
     return str;
 }
 
+string msc::removeTrailingSpaces(string str) {
+    while(str[str.size()-1] == ' ')
+        str.pop_back();
+    return str;
+}
+
 int msc::strToInt(string str) {
     int res;
     sscanf(str.c_str(), "%d", &res);
