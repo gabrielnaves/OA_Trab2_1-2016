@@ -23,7 +23,7 @@ Btree::Btree(int order, string data_fname, string tree_fname) {
 }
 
 Btree::~Btree() {
-    packTree();
+    // packTree();
 }
 
 void Btree::makeTreeFromDataFile() {
@@ -41,6 +41,9 @@ void Btree::makeTreeFromDataFile() {
     closeDataFile(); ///
     for (int i = 0; i < primary_keys.size(); ++i)
         insert(primary_keys[i], offsets[i]);
+
+    index_file.open(tree_fname, std::fstream::out);
+    closeIndexFile();
     packTree();
 }
 
@@ -49,7 +52,50 @@ void Btree::unPackTree() {
 }
 
 void Btree::packTree() {
+    openIndexFile();
+        index_file << "order: " << setw(3) << order << endl;
+        tmp = 0;
+        packStoreNode(root);
+    closeIndexFile();
+}
 
+void Btree::packStoreNode(Node node) {
+    if (node) {
+        for (auto next : node->next_pages)
+            packStoreNode(next);
+
+        node->pos_on_file = tmp;
+        index_file << setw(3) << tmp++ << "|" << setw(3) << node->keys.size() << "|";
+        // Primary keys
+        for (int i = 0; i < order - 1; ++i) {
+            if (i < node->keys.size())
+                index_file << " " << node->keys[i];
+            else
+                index_file << " " << setw(8) << setfill('#') << "" << setfill(' ');
+        }
+        index_file << "|";
+        // Prrs
+        for (int i = 0; i < order - 1; ++i) {
+            if (i < node->prr.size())
+                index_file << " " << setw(3) << node->prr[i];
+            else
+                index_file << " " << setw(3) << setfill('#') << "" << setfill(' ');
+        }
+        index_file << "|";
+        // Pointers
+        for (int i = 0; i < order; ++i) {
+            if (i < node->next_pages.size()) {
+                if (node->next_pages[i] != nullptr)
+                    index_file << " " << setw(3) << node->next_pages[i]->pos_on_file;
+                else
+                    index_file << " " << setw(3) << setfill('#') << "" << setfill(' ');
+            }
+            else {
+                index_file << " " << setw(3) << setfill('#') << "" << setfill(' ');
+            }
+        }
+        index_file << endl;
+    }
 }
 
 void Btree::insert(KeyType key, int offset) {

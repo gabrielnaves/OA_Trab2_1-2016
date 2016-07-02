@@ -17,6 +17,7 @@ struct BtreeNode {
     bool isLeaf();
 
     int order;
+    int pos_on_file;
     vector<KeyType> keys;
     vector<int> prr;
     vector<Node> next_pages;

@@ -18,6 +18,7 @@ class Btree {
 
     void makeTreeFromDataFile();
     void packTree();
+    void packStoreNode(Node node);
     void unPackTree();
 
     // Insertion methods
@@ -36,6 +37,8 @@ class Btree {
 
     int order;
     Node root;
+
+    int tmp;
 
     fstream data_file;
     fstream index_file;

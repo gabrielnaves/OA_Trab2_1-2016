@@ -19,7 +19,7 @@ void Test::testMiscOperations() {
 }
 
 void Test::testBtree() {
-    Btree btree(4, "testes/lista.txt", "testes/index.txt");
+    Btree btree(4, "testes/lista.txt", "testes/btree.txt");
     btree.show();
 }
 
