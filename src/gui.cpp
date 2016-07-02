@@ -34,6 +34,12 @@ void GUI::createBTreeFromDataFile() {
     int order;
     cin >> order;
 
+    fstream index_file(index_fname);
+    if (index_file) {
+        index_file.close();
+        remove(index_fname.c_str());
+    }
+
     Btree btree(order, data_fname, index_fname);
     if (btree.isGood()) {
         cout << "Arvore-B criada com sucesso!" << endl;

@@ -46,40 +46,67 @@ void Btree::makeTreeFromDataFile() {
 }
 
 void Btree::unPackTree() {
-    root = makeNewPage();
     openIndexFile();
         string line;
         getline(index_file, line);
+        int root_node = msc::strToInt(line.substr(6));
+        vector<Node> tree_pages;
         while (getline(index_file, line)) {
-            vector<string> primary_keys;
-            vector<int> offsets;
+            int node_num;
             int node_size;
-            string tmp;
+            vector<KeyType> primary_keys;
+            vector<int> offsets;
+            vector<string> refs;
+
+            // Node number
+            node_num = msc::strToInt(line.substr(0,3));
             line.erase(line.begin(), line.begin()+6);
-            node_size = msc::strToInt(line.substr(0, 3));
-            line.erase(line.begin(), line.begin()+7);
+
+            // Node size
+            node_size = msc::strToInt(line.substr(0,3));
+            line.erase(line.begin(), line.begin()+6);
+
+            // Primary keys on this node
             for (int i = 0; i < order-1; ++i) {
                 if (i < node_size)
-                    primary_keys.push_back(line.substr(0, 8));
+                    primary_keys.push_back(line.substr(1,8));
                 line.erase(line.begin(), line.begin()+9);
             }
             line.erase(line.begin(), line.begin()+3);
+
+            // Prrs on this node
             for (int i = 0; i < order-1; ++i) {
                 if (i < node_size)
-                    offsets.push_back(msc::strToInt(line.substr(0, 3)));
+                    offsets.push_back(msc::strToInt(line.substr(1,3)));
                 line.erase(line.begin(), line.begin()+4);
             }
-            for (int i = 0; i < primary_keys.size(); ++i)
-                insert(primary_keys[i], offsets[i]);
+            line.erase(line.begin(), line.begin()+3);
+
+            // References on this node
+            for (int i = 0; i < order; ++i) {
+                refs.push_back(line.substr(1,3));
+                line.erase(line.begin(), line.begin()+4);
+            }
+
+            tree_pages.push_back(makeNewPage());
+            tree_pages[node_num]->pos_on_file = node_num;
+            tree_pages[node_num]->keys = primary_keys;
+            tree_pages[node_num]->prr = offsets;
+            for (auto ref : refs)
+                if (ref != "###")
+                    tree_pages[node_num]->next_pages.push_back(tree_pages[msc::strToInt(ref)]);
         }
+        root = tree_pages[tree_pages.size()-1];
     closeIndexFile();
 }
 
 void Btree::packTree() {
     openIndexFile();
-        index_file << "order: " << setw(3) << order << endl;
+        index_file << "root: " << setw(3) << "" << endl;
         tmp = 0;
         packStoreNode(root);
+        index_file.seekg(0);
+        index_file << "root: " << setw(3) << root->pos_on_file << endl;
     closeIndexFile();
 }
 
@@ -185,7 +212,7 @@ void Btree::insertKeyOnLeaf(Node leaf_node, KeyType key, int offset) {
         leaf_node->keys.insert(leaf_node->keys.begin()+i, key);
         leaf_node->prr.insert(leaf_node->prr.begin()+i, offset);
     }
-    leaf_node->next_pages.resize(leaf_node->keys.size());
+    leaf_node->next_pages.resize(leaf_node->keys.size()+1);
 }
 
 Node Btree::makeNewPage() {

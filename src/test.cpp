@@ -19,8 +19,12 @@ void Test::testMiscOperations() {
 }
 
 void Test::testBtree() {
-    Btree btree(4, "testes/lista.txt", "testes/btree.txt");
-    btree.show();
+    remove("testes/btree.txt");
+    Btree a(4, "testes/lista.txt", "testes/btree.txt");
+    a.show();
+    cout << "========" << endl;
+    Btree b(4, "testes/lista.txt", "testes/btree.txt");
+    b.show();
 }
 
 void Test::finalOutput() {
