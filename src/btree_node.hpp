@@ -11,13 +11,14 @@ typedef shared_ptr<BtreeNode> Node;
 struct BtreeNode {
   public:
     BtreeNode(int order);
-    BtreeNode(int order, vector<KeyType> keys, vector<Node> next_pages);
+    BtreeNode(int order, vector<KeyType> keys, vector<int> prr, vector<Node> next_pages);
 
     void show();
     bool isLeaf();
 
     int order;
     vector<KeyType> keys;
+    vector<int> prr;
     vector<Node> next_pages;
 };
 

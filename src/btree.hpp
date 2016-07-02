@@ -12,7 +12,7 @@ class Btree {
     ~Btree();
 
     void show();
-    void insert(KeyType key);
+    void insert(KeyType key, int offset = -1);
 
   private:
 
@@ -21,13 +21,13 @@ class Btree {
     void unPackTree();
 
     // Insertion methods
-    void insertOnNode(Node node, Node parent, KeyType key);
-    void insertKeyOnLeaf(Node leaf_node, KeyType key);
+    void insertOnNode(Node node, Node parent, KeyType key, int offset = -1);
+    void insertKeyOnLeaf(Node leaf_node, KeyType key, int offset = -1);
     void insertionRebalanceNode(Node node, Node parent);
 
     void showBtree(Node page);
     Node makeNewPage();
-    Node makeNewPage(vector<KeyType> keys, vector<Node> refs);
+    Node makeNewPage(vector<KeyType> keys, vector<int> prrs, vector<Node> refs);
 
     int order;
     Node root;
