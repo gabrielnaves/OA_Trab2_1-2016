@@ -7,6 +7,7 @@ namespace msc {
 
 string makePrimaryKey(string name, string reg_num);
 string removeSpaces(string str);
+int strToInt(string str);
 
 }
 

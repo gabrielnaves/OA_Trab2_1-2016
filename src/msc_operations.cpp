@@ -15,3 +15,9 @@ string msc::removeSpaces(string str) {
     }
     return str;
 }
+
+int msc::strToInt(string str) {
+    int res;
+    sscanf(str.c_str(), "%d", &res);
+    return res;
+}

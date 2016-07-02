@@ -9,10 +9,11 @@
 class Btree {
   public:
     Btree(int order, string data_fname, string tree_fname);
-    ~Btree();
 
     void show();
     void insert(KeyType key, int offset = -1);
+
+    bool isGood() { return is_good; }
 
   private:
 
@@ -44,6 +45,8 @@ class Btree {
     fstream index_file;
     string data_fname;
     string tree_fname;
+
+    bool is_good;
 };
 
 #endif /* BTREE_HPP */

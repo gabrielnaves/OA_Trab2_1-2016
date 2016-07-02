@@ -3,7 +3,7 @@
 #include "test.hpp"
 #include "gui.hpp"
 
-#define RUN_TESTS
+// #define RUN_TESTS
 
 int main() {
 #ifdef RUN_TESTS

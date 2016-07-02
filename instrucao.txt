@@ -1,0 +1,10 @@
+Integrante:
+    - Gabriel Naves da Silva  - 12/0011867
+
+# Instrucoes de compilacao (Linux):
+
+## Para compilar o codigo, utilize o seguinte comando:
+g++ src/*.cpp
+
+## Para executar o codigo, utilize o seguinte comando:
+./a.out

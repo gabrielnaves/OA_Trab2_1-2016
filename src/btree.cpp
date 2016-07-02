@@ -8,9 +8,11 @@ Btree::Btree(int order, string data_fname, string tree_fname) {
     openDataFile(); ///
         if (not data_file) {
             cout << "Erro! Arquivo de dados não encontrado!" << endl;
+            is_good = false;
             return;
         }
     closeDataFile(); ///
+    is_good = true;
 
     openIndexFile(); ///
         bool index_file_exists = index_file;
@@ -20,10 +22,6 @@ Btree::Btree(int order, string data_fname, string tree_fname) {
         unPackTree();
     else
         makeTreeFromDataFile();
-}
-
-Btree::~Btree() {
-    // packTree();
 }
 
 void Btree::makeTreeFromDataFile() {
@@ -48,7 +46,33 @@ void Btree::makeTreeFromDataFile() {
 }
 
 void Btree::unPackTree() {
-
+    root = makeNewPage();
+    openIndexFile();
+        string line;
+        getline(index_file, line);
+        while (getline(index_file, line)) {
+            vector<string> primary_keys;
+            vector<int> offsets;
+            int node_size;
+            string tmp;
+            line.erase(line.begin(), line.begin()+6);
+            node_size = msc::strToInt(line.substr(0, 3));
+            line.erase(line.begin(), line.begin()+7);
+            for (int i = 0; i < order-1; ++i) {
+                if (i < node_size)
+                    primary_keys.push_back(line.substr(0, 8));
+                line.erase(line.begin(), line.begin()+9);
+            }
+            line.erase(line.begin(), line.begin()+3);
+            for (int i = 0; i < order-1; ++i) {
+                if (i < node_size)
+                    offsets.push_back(msc::strToInt(line.substr(0, 3)));
+                line.erase(line.begin(), line.begin()+4);
+            }
+            for (int i = 0; i < primary_keys.size(); ++i)
+                insert(primary_keys[i], offsets[i]);
+        }
+    closeIndexFile();
 }
 
 void Btree::packTree() {
@@ -65,7 +89,7 @@ void Btree::packStoreNode(Node node) {
             packStoreNode(next);
 
         node->pos_on_file = tmp;
-        index_file << setw(3) << tmp++ << "|" << setw(3) << node->keys.size() << "|";
+        index_file << setw(3) << tmp++ << " | " << setw(3) << node->keys.size() << " | ";
         // Primary keys
         for (int i = 0; i < order - 1; ++i) {
             if (i < node->keys.size())
@@ -73,7 +97,7 @@ void Btree::packStoreNode(Node node) {
             else
                 index_file << " " << setw(8) << setfill('#') << "" << setfill(' ');
         }
-        index_file << "|";
+        index_file << " | ";
         // Prrs
         for (int i = 0; i < order - 1; ++i) {
             if (i < node->prr.size())
@@ -81,7 +105,7 @@ void Btree::packStoreNode(Node node) {
             else
                 index_file << " " << setw(3) << setfill('#') << "" << setfill(' ');
         }
-        index_file << "|";
+        index_file << " | ";
         // Pointers
         for (int i = 0; i < order; ++i) {
             if (i < node->next_pages.size()) {
