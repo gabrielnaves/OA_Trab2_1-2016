@@ -13,10 +13,17 @@ class GUI {
 
   private:
 
+    static void fileMenu();
+
     static void createBTreeFromDataFile();
-    static void searchReg();
+    static void searchReg(string data_fname, string index_fname, int order);
 
     static bool is_ok;
+
+    static string ReadLine();
+    static int ReadInt();
+
+    static bool fileExists(string fname);
 };
 
 #endif /* GUI_HPP */
