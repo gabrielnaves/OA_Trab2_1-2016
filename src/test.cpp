@@ -27,9 +27,11 @@ void Test::testBtree() {
     remove("testes/btree.txt");
     remove("testes/btree2.txt");
     remove("testes/btree3.txt");
+    remove("testes/lista2.txt");
+    msc::copyFile("testes/lista.txt","testes/lista2.txt");
     Btree a(4, "testes/lista.txt", "testes/btree.txt");
     Btree b(5, "testes/lista.txt", "testes/btree2.txt");
-    Btree c(100, "testes/lista.txt", "testes/btree3.txt");
+    Btree c(4, "testes/lista2.txt", "testes/btree3.txt");
 }
 
 void Test::testSearch() {
@@ -56,14 +58,6 @@ void Test::testSearch() {
     assertEqual(reg.curso, "EM");
     assertEqual(reg.turma, "B");
     assertEqual(reg.nseeks, 3);
-
-    reg = Search::search("testes/lista.txt", "testes/btree3.txt", "And71929", 100);
-    assertTrue(reg.good);
-    assertEqual(reg.name, "Andre Alvim Batista");
-    assertEqual(reg.matr, "71929");
-    assertEqual(reg.curso, "EM");
-    assertEqual(reg.turma, "B");
-    assertEqual(reg.nseeks, 1);
 }
 
 void Test::finalOutput() {

@@ -27,3 +27,9 @@ int msc::strToInt(string str) {
     sscanf(str.c_str(), "%d", &res);
     return res;
 }
+
+void msc::copyFile(string src, string dst) {
+    ifstream srcf(src);
+    ofstream dstf(dst);
+    dstf << srcf.rdbuf();
+}

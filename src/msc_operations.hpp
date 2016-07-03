@@ -10,6 +10,8 @@ string removeSpaces(string str);
 string removeTrailingSpaces(string str);
 int strToInt(string str);
 
+void copyFile(string src, string dst);
+
 }
 
 #endif /* MSC_OPERATIONS_HPP */
