@@ -12,6 +12,8 @@ int strToInt(string str);
 
 void copyFile(string src, string dst);
 
+string completeNameToFileStandard(string name);
+
 }
 
 #endif /* MSC_OPERATIONS_HPP */

@@ -33,3 +33,11 @@ void msc::copyFile(string src, string dst) {
     ofstream dstf(dst);
     dstf << srcf.rdbuf();
 }
+
+string msc::completeNameToFileStandard(string name) {
+    while (name.size() > 40)
+        name.pop_back();
+    while (name.size() < 40)
+        name.push_back(' ');
+    return name;
+}

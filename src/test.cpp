@@ -32,6 +32,13 @@ void Test::testBtree() {
     Btree a(4, "testes/lista.txt", "testes/btree.txt");
     Btree b(5, "testes/lista.txt", "testes/btree2.txt");
     Btree c(4, "testes/lista2.txt", "testes/btree3.txt");
+
+    Reg reg = make_shared<Registry>();
+    reg->name = "Gabriel Naves da Silva";
+    reg->matr = "12001";
+    reg->curso = "MC";
+    reg->turma = "Z";
+    c.insert(reg);
 }
 
 void Test::testSearch() {
@@ -58,6 +65,14 @@ void Test::testSearch() {
     assertEqual(reg.curso, "EM");
     assertEqual(reg.turma, "B");
     assertEqual(reg.nseeks, 3);
+
+    reg = Search::search("testes/lista2.txt", "testes/btree3.txt", "Gab12001", 4);
+    assertTrue(reg.good);
+    assertEqual(reg.name, "Gabriel Naves da Silva");
+    assertEqual(reg.matr, "12001");
+    assertEqual(reg.curso, "MC");
+    assertEqual(reg.turma, "Z");
+    assertEqual(reg.nseeks, 2);
 }
 
 void Test::finalOutput() {

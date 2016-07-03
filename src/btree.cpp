@@ -24,6 +24,10 @@ Btree::Btree(int order, string data_fname, string tree_fname) {
         makeTreeFromDataFile();
 }
 
+Btree::~Btree() {
+    packTree();
+}
+
 void Btree::makeTreeFromDataFile() {
     vector<string> primary_keys;
     vector<int> offsets;
@@ -151,18 +155,25 @@ void Btree::packStoreNode(Node node) {
 
 void Btree::insert(KeyType key, int offset) {
     insertOnNode(root, nullptr, key, offset);
+    packTree();
 }
 
-void Btree::insertOnNode(Node node, Node parent, KeyType key, int offset) {
+void Btree::insert(Reg reg) {
+    string key = msc::makePrimaryKey(reg->name, reg->matr);
+    insertOnNode(root, nullptr, key, -1, reg);
+    packTree();
+}
+
+void Btree::insertOnNode(Node node, Node parent, KeyType key, int offset, Reg reg) {
     if (not node->isLeaf()) {
         int i = 0;
         for (; i < node->keys.size(); ++i)
             if (key < node->keys[i])
                 break;
-        insertOnNode(node->next_pages[i], node, key, offset);
+        insertOnNode(node->next_pages[i], node, key, offset, reg);
     }
     else
-        insertKeyOnLeaf(node, key, offset);
+        insertKeyOnLeaf(node, key, offset, reg);
     if (node->keys.size() >= order)
         insertionRebalanceNode(node, parent);
 }
@@ -199,7 +210,9 @@ void Btree::insertionRebalanceNode(Node node, Node parent) {
     }
 }
 
-void Btree::insertKeyOnLeaf(Node leaf_node, KeyType key, int offset) {
+void Btree::insertKeyOnLeaf(Node leaf_node, KeyType key, int offset, Reg reg) {
+    if (reg != nullptr)
+        offset = insertOnDataFile(reg);
     if (leaf_node->keys.size() == 0) {
         leaf_node->keys.push_back(key);
         leaf_node->prr.push_back(offset);
@@ -213,6 +226,27 @@ void Btree::insertKeyOnLeaf(Node leaf_node, KeyType key, int offset) {
         leaf_node->prr.insert(leaf_node->prr.begin()+i, offset);
     }
     leaf_node->next_pages.resize(leaf_node->keys.size()+1);
+}
+
+int Btree::insertOnDataFile(Reg reg) {
+    int offset = 0;
+    // Calculate offset
+    openDataFile();
+    {
+        string line;
+        while (getline(data_file, line))
+            ++offset;
+    }
+    closeDataFile();
+    // Insert at end of data file
+    openDataFile();
+    {
+        data_file.seekp(0, ios_base::end);
+        data_file << msc::completeNameToFileStandard(reg->name) << " " << reg->matr
+                  << "  " << reg->curso << "  " << reg->turma << endl;
+    }
+    closeDataFile();
+    return offset;
 }
 
 Node Btree::makeNewPage() {

@@ -14,4 +14,6 @@ struct Registry {
     bool good;
 };
 
+typedef shared_ptr<Registry> Reg;
+
 #endif /* REGISTRY_HPP */
