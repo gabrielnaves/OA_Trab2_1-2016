@@ -75,7 +75,7 @@ void GUI::fileMenu() {
         if (op == "1")
             searchReg(data_fname, index_fname, order);
         else if (op == "2")
-            cout << "Opcao ainda nao implementada." << endl;
+            insertReg(data_fname, index_fname, order);
         else if (op == "3")
             cout << "Opcao ainda nao implementada." << endl;
         else if (op == "q" or op == "Q")
@@ -128,6 +128,34 @@ void GUI::searchReg(string data_fname, string index_fname, int order) {
         cout << "Turma: " << reg.turma << endl;
         cout << "Numero de seeks para encontrar o registro: " << reg.nseeks << endl;
     }
+}
+
+void GUI::insertReg(string data_fname, string index_fname, int order) {
+    Reg reg = make_shared<Registry>();
+
+    cout << "Digite o nome completo do aluno que deseja inserir: " << endl;
+    reg->name = ReadLine();
+
+    cout << "Digite o numero de matricula do aluno: " << endl;
+    reg->matr = ReadLine();
+
+    cout << "Digite o curso do aluno: " << endl;
+    reg->curso = ReadLine();
+
+    cout << "Digite a turma do aluno: " << endl;
+    reg->turma = ReadLine();
+
+    reg->good = true;
+
+    Btree btree(order, data_fname, index_fname);
+    btree.insert(reg);
+    if (reg->good) {
+        cout << "---" << endl << "Insercao realizada com sucesso!" << endl;
+        cout << "Visualizacao por DFS da arvore-B:" << endl;
+        btree.show();
+    }
+    else
+        cout << "---" << endl << "Erro! O registro ja existe!" << endl;
 }
 
 string GUI::ReadLine() {

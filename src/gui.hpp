@@ -17,6 +17,7 @@ class GUI {
 
     static void createBTreeFromDataFile();
     static void searchReg(string data_fname, string index_fname, int order);
+    static void insertReg(string data_fname, string index_fname, int order);
 
     static bool is_ok;
 

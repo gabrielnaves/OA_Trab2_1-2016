@@ -211,6 +211,12 @@ void Btree::insertionRebalanceNode(Node node, Node parent) {
 }
 
 void Btree::insertKeyOnLeaf(Node leaf_node, KeyType key, int offset, Reg reg) {
+    for (auto k : leaf_node->keys)
+        if (k == key) {
+            if (reg != nullptr)
+                reg->good = false;
+            return;
+        }
     if (reg != nullptr)
         offset = insertOnDataFile(reg);
     if (leaf_node->keys.size() == 0) {
